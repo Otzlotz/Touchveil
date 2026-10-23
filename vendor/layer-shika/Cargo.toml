@@ -1,0 +1,95 @@
+[package]
+name = "layer-shika"
+version = "0.3.1"
+edition = "2024"
+license = "AGPL-3.0-or-later"
+repository = "https://codeberg.org/waydeer/layer-shika"
+rust-version = "1.85"
+keywords = ["layer-shell", "wayland", "slint", "femtovg", "smithay"]
+categories = ["gui"]
+description = "A layer shell library for Wayland with Slint UI integration"
+readme = "README.md"
+
+[lints]
+workspace = true
+
+[dependencies]
+layer-shika-composition.workspace = true
+
+[features]
+default = ["log"]
+log = ["layer-shika-composition/log"]
+tracing = ["layer-shika-composition/tracing"]
+
+[workspace]
+resolver = "2"
+members = [
+    "crates/domain",
+    "crates/adapters",
+    "crates/composition",
+]
+
+[workspace.package]
+version = "0.3.1"
+edition = "2024"
+license = "AGPL-3.0-or-later"
+repository = "https://codeberg.org/waydeer/layer-shika"
+rust-version = "1.85"
+keywords = ["layer-shell", "wayland", "slint", "femtovg", "smithay"]
+categories = ["gui"]
+
+[workspace.dependencies]
+glutin = { version = "0.32.3", default-features = false, features = [
+    "wayland",
+] }
+spin_on = "0.1"
+log = "0.4.29"
+raw-window-handle = "0.6.2"
+slint = { version = "1.18.1", default-features = false, features = [
+    "compat-1-2",
+    "renderer-femtovg",
+] }
+slint-interpreter = { version = "1.18.1", default-features = false, features = [
+    "compat-1-2",
+] }
+smithay-client-toolkit = "0.20.0"
+thiserror = "2.0.18"
+tracing = { version = "0.1.44", default-features = false, features = ["std"] }
+wayland-backend = { version = "0.3.17", features = ["client_system"] }
+wayland-client = "0.31.12"
+wayland-protocols = { version = "0.32.10", features = ["client", "staging"] }
+xkbcommon = { version = "0.9.0", features = ["wayland"] }
+
+layer-shika-domain = { version = "0.3.1", path = "crates/domain" }
+layer-shika-adapters = { version = "0.3.1", path = "crates/adapters", default-features = false }
+layer-shika-composition = { version = "0.3.1", path = "crates/composition", default-features = false }
+
+[workspace.lints.clippy]
+all = { level = "deny", priority = -1 }
+pedantic = { level = "deny", priority = -1 }
+cargo = { level = "deny", priority = -1 }
+disallowed_types = "deny"
+disallowed_methods = "deny"
+pub_use = "deny"
+unwrap_used = "deny"
+expect_used = "deny"
+print_stdout = "deny"
+print_stderr = "deny"
+panic = "deny"
+indexing_slicing = "deny"
+exit = "deny"
+redundant_clone = "deny"
+clone_on_ref_ptr = "deny"
+vec_box = "deny"
+large_enum_variant = "deny"
+await_holding_lock = "deny"
+future_not_send = "deny"
+cognitive_complexity = "deny"
+needless_collect = "deny"
+let_underscore_must_use = "deny"
+absolute_paths = "deny"
+multiple_crate_versions = "allow"
+missing_errors_doc = "allow"
+missing_panics_doc = "allow"
+must_use_candidate = "allow"
+uninlined_format_args = "allow"

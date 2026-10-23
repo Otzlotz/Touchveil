@@ -1,0 +1,15 @@
+[package]
+name = "touchveil-daemon"
+description = "Takes over the touchscreen, passes normal touches through and controls the overlay with an edge gesture"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+# API is renamed from 0.13 on (KeyCode/AbsoluteAxisCode), hence pinned.
+evdev = "=0.12.2"
+libc = "0.2"
+serde.workspace = true
+toml.workspace = true
+touchveil-common.workspace = true

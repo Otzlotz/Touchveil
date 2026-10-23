@@ -1,0 +1,13 @@
+[package]
+name = "touchveil-common"
+description = "Shared types of touchveil-daemon and touchveil-overlay: protocol, edges, paths"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+serde.workspace = true
+
+[dev-dependencies]
+toml.workspace = true

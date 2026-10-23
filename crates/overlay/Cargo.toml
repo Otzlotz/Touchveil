@@ -1,0 +1,19 @@
+[package]
+name = "touchveil-overlay"
+description = "Overlay with widgets for touchscreens (Slint + Wayland layer shell), driven by touchveil-daemon"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+# Patched layer-shika (fork at 0a68433 + vendor/layer-shika-patches/), see DEV.md
+layer-shika = { path = "../../vendor/layer-shika" }
+libc = "0.2"
+serde.workspace = true
+toml.workspace = true
+# Only to read the monitor names at startup (same version as in layer-shika).
+wayland-client = "0.31"
+touchveil-common.workspace = true
+# Tray icon; without tokio (async-io is much smaller).
+ksni = { version = "0.3.7", default-features = false, features = ["async-io", "blocking"] }

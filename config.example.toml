@@ -1,0 +1,183 @@
+# Lives at ~/.config/touchveil/config.toml (install.sh creates it).
+# All fields are optional; the values shown are the defaults.
+
+# Touch device. If unset, the first touchscreen is used. Only needed if there are several:
+# part of the name or a pattern with * (see `libinput list-devices`).
+# device = "wch*touchscreen"
+
+# Default: $XDG_RUNTIME_DIR/touchveil.sock
+# socket = "/run/user/1000/touchveil.sock"
+
+# Rotation of the touchscreen relative to the display: 0 | 90 | 180 | 270.
+# Try this if touches in the overlay land in the wrong place.
+rotate = 0
+
+[gesture]
+# Where the gesture starts and where the panel slides in from:
+#   "left" | "right" | "top" | "bottom"
+#   "top-left" | "top-right" | "bottom-left" | "bottom-right"  (corners, panel comes from the left/right)
+edge = "right"
+strip_width = 0.04      # edge strip, fraction of the screen (0.01 to 0.25); corners are twice as large
+fingers = 2             # fingers required in the strip (1 to the number of slots)
+arm_window_ms = 0       # how long an edge finger waits for the others (ms); 0 = as long as it
+                        # stays on the edge (holding/dragging on the edge then arrives only afterwards)
+travel = 0.35           # distance for 100 % progress, fraction of the screen
+open_threshold = 0.5    # from this progress on, lifting the fingers opens the overlay
+fling = true            # a fast flick opens even below that, a fast flick back cancels
+
+[actions]
+# Optional commands on open/close
+# on_open  = ["hyprctl", "dispatch", "workspace", "9"]
+# on_close = ["hyprctl", "dispatch", "workspace", "previous"]
+
+# ============================================================
+#  Overlay (touchveil-overlay)
+#  Changes take effect the next time the overlay opens, no restart needed.
+#  Commands run via `sh -c`, so pipes and && work.
+# ============================================================
+
+[overlay]
+# monitor = "DP-3"          # only needed with multiple monitors (names: hyprctl monitors)
+title = "Touchveil"
+size = 0.45                 # panel width (left/right) or height (top/bottom), 1.0 = full screen
+close_button = true
+tap_outside_closes = true   # tapping outside the panel closes it
+                            # (pushing the panel back to the edge always closes it)
+show_touches = false        # show touch points (for testing)
+edge_hint = true            # glowing strip at the edge as soon as a finger is in the start zone
+swipe_close = 0.25          # how far (fraction of the panel size) to push it to the edge to close
+auto_close_s = 0            # close after this many seconds without touch, 0 = never
+close_after_action = false  # buttons close the overlay after a tap
+                            # (per button: close = true/false)
+
+[theme]                     # colors: #rgb, #rrggbb or #rrggbbaa
+panel = "#171a21f5"
+dim = 0.55                  # dimming behind the panel (0 to 1)
+text = "#f2f2f7"
+muted = "#9aa0ad"           # label color of displays
+widget = "#252a35"
+pressed = "#3a4150"
+accent = "#4d9fff"
+border = "#ffffff14"
+border_width = 1
+radius = 14
+font_size = 22
+gap = 12
+padding = 24
+animation_ms = 220          # open/close in ms, 0 = no animation
+
+[grid]
+columns = 4
+rows = 6
+
+# Every widget: type, col, row (from 1), optional w/h (cells, default 1),
+# label, accent (own color) and timeout_ms (command timeout; default 2 s for
+# state/value/sliders, 5 s for displays and toggles, buttons have none).
+# Buttons and toggles: confirm = true only fires on a second tap (within 3 s).
+#
+#   button   exec = "..."                  close = true/false: close afterwards or not
+#   toggle   on = "...", off = "..."       state = "..." prints true/false or uses the exit code
+#   slider   exec = "... {value} ..."      value = "..." reads the start value (first number)
+#            min, max, step, unit
+#   display  exec = "..."                  interval_ms (only while the overlay is open)
+
+[[widget]]
+type = "display"
+label = "Time"
+exec = "date +%H:%M"
+interval_ms = 5000
+col = 1
+row = 1
+w = 2
+
+[[widget]]
+type = "display"
+label = "Battery"
+exec = "cat /sys/class/power_supply/BAT*/capacity 2>/dev/null | head -1 | sed 's/$/ %/'"
+interval_ms = 30000
+col = 3
+row = 1
+w = 2
+
+[[widget]]
+type = "slider"
+label = "Volume"
+exec = "wpctl set-volume @DEFAULT_AUDIO_SINK@ {value}%"
+value = "wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{print $2 * 100}'"
+unit = "%"
+col = 1
+row = 2
+w = 4
+
+[[widget]]
+type = "slider"
+label = "Brightness"
+exec = "brightnessctl -q set {value}%"
+value = "brightnessctl -m | cut -d, -f4"
+min = 1
+unit = "%"
+col = 1
+row = 3
+w = 4
+
+[[widget]]
+type = "toggle"
+label = "Mic off"
+on = "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ 1"
+off = "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ 0"
+state = "wpctl get-volume @DEFAULT_AUDIO_SOURCE@ | grep -q MUTED"
+accent = "#e5534b"
+col = 1
+row = 4
+w = 2
+
+[[widget]]
+type = "toggle"
+label = "Do not disturb"
+on = "makoctl mode -a do-not-disturb"
+off = "makoctl mode -r do-not-disturb"
+state = "makoctl mode | grep -q do-not-disturb"
+col = 3
+row = 4
+w = 2
+
+[[widget]]
+type = "button"
+label = "⏮"
+exec = "playerctl previous"
+col = 1
+row = 5
+
+[[widget]]
+type = "button"
+label = "⏯"
+exec = "playerctl play-pause"
+col = 2
+row = 5
+w = 2
+
+[[widget]]
+type = "button"
+label = "⏭"
+exec = "playerctl next"
+col = 4
+row = 5
+
+[[widget]]
+type = "button"
+label = "Screenshot"
+exec = "sleep 0.3 && grim ~/Pictures/screenshot-$(date +%s).png"
+close = true
+col = 1
+row = 6
+w = 2
+
+[[widget]]
+type = "button"
+label = "Lock"
+exec = "loginctl lock-session"
+close = true
+confirm = true
+col = 3
+row = 6
+w = 2

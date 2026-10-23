@@ -1,0 +1,15 @@
+# systemd user service for touchveil-daemon. install.sh replaces @BIN@ and enables it:
+#   systemctl --user status touchveil-daemon     status
+#   journalctl --user -u touchveil-daemon -f     Log
+[Unit]
+Description=Touchveil: takes over the touchscreen for the overlay
+Documentation=https://github.com/Otzlotz/touchveil-ai
+
+[Service]
+ExecStart=@BIN@/touchveil-daemon
+# Without a touchscreen the daemon waits by itself; it is only restarted after an error.
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=default.target

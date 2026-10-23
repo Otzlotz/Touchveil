@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Touchveil
+GenericName=Touch overlay
+Comment=Overlay with buttons, switches and sliders for the touchscreen
+Exec=@BIN@/touchveil-overlay
+Icon=input-touchscreen
+Terminal=false
+Categories=Utility;
+Keywords=touch;touchscreen;overlay;tray;
+StartupNotify=false

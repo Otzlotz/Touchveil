@@ -1,0 +1,5 @@
+# Gives the logged-in user (active session) access to touchscreens and uinput,
+# without group membership and without logging in again. Must run before 73-seat-late.rules.
+# Copied to /etc/udev/rules.d/ by install.sh.
+SUBSYSTEM=="input", KERNEL=="event*", ENV{ID_INPUT_TOUCHSCREEN}=="1", TAG+="uaccess"
+KERNEL=="uinput", SUBSYSTEM=="misc", TAG+="uaccess", OPTIONS+="static_node=uinput"

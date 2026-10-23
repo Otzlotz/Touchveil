@@ -1,0 +1,23 @@
+[workspace]
+resolver = "2"
+members = ["crates/common", "crates/daemon", "crates/overlay"]
+# Separate workspace (patched copy), used only as a path dependency.
+exclude = ["vendor/layer-shika"]
+
+[workspace.package]
+version = "0.3.0"
+edition = "2021"
+# Minimum: Slint 1.18 needs 1.92 (File::try_lock exists since 1.89).
+rust-version = "1.92"
+license = "GPL-3.0-or-later"
+
+[workspace.dependencies]
+serde = { version = "1", features = ["derive"] }
+toml = "1.1.8"
+touchveil-common = { path = "crates/common" }
+
+[profile.release]
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true
